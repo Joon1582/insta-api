@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from deps import SessionDep, PostDep
 from sqlalchemy import select
 from models import Post
-from schemas import PostOut, PostCreate
+from schemas import PostOut, PostCreate, PostUpdate
 
 router = APIRouter(prefix='/api/posts')
 
@@ -29,3 +29,15 @@ def post_create(data: PostCreate, db: SessionDep):
     db.commit()
     db.refresh(post)
     return post
+
+@router.patch('/{post_id}', response_model=PostOut)
+def post_update(data: PostUpdate, post: PostDep, db: SessionDep):
+    post.content = data.content
+    db.commit()
+    db.refresh(post)
+    return post
+
+@router.delete('/{post_id}', status_code=204)
+def post_delete(post: PostDep, db: SessionDep):
+    db.delete(post)
+    db.commit()
