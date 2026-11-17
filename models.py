@@ -24,8 +24,13 @@ class Post(Base):
   user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
   user: Mapped['User'] = relationship(back_populates='posts')
 
-  comments: Mapped[list['Comment']] = relationship(back_populates='post', cascade='all, delete-orphan')
+  comments: Mapped[list['Comment']] = relationship(
+    back_populates='post', 
+    cascade='all, delete-orphan'
+  )
   likes: Mapped[list['Like']] = relationship(cascade='all, delete-orphan')
+
+  image_url: Mapped[str | None]
 
 
 class Comment(Base):
